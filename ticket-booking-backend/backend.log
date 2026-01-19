@@ -1,0 +1,2 @@
+MONGO_URI is not defined in environment - skipping DB connection
+Ticket-booking backend API running on http://localhost:4000

@@ -1,0 +1,10 @@
+
+> ticket-booking-frontend@1.0.0 dev
+> next dev
+
+  ▲ Next.js 13.5.8
+  - Local:        http://localhost:3000
+
+ ✓ Ready in 1193ms
+ ✓ Compiled /page in 954ms (448 modules)
+ ✓ Compiled /about/page in 107ms (438 modules)
