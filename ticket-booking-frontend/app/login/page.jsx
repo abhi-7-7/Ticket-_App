@@ -98,7 +98,6 @@ export default function LoginPage() {
             </form>
 
             <div className={styles.footer}>
-              <p className={styles.helper}>Forgot your password? <Link href="/reset-password" className={styles.linkButton}>Reset it here</Link></p>
               <p className={styles.helper}>New here? <Link href="/signup" className={styles.linkButton}>Create an account</Link></p>
             </div>
           </Card>

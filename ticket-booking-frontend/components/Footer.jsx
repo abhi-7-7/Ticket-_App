@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import styles from './Footer.module.css';
 
 export default function Footer() {
@@ -10,16 +11,16 @@ export default function Footer() {
             <p className={styles.text}>Making travel planning simpler, faster, and more delightful.</p>
           </div>
           <div className={styles.links}>
-            <a href="/hotels">Hotels</a>
-            <a href="/blogs">Blogs</a>
-            <a href="/about">About</a>
+            <Link href="/hotels">Hotels</Link>
+            <Link href="/blogs">Blogs</Link>
+            <Link href="/about">About</Link>
           </div>
         </div>
         <div className={styles.bottomRow}>
           <p className={styles.meta}>© {new Date().getFullYear()} Ticket Booking. All rights reserved.</p>
           <div className={styles.links}>
-            <a href="/login">Login</a>
-            <a href="/signup">Sign up</a>
+            <Link href="/login">Login</Link>
+            <Link href="/signup">Sign up</Link>
           </div>
         </div>
       </div>
