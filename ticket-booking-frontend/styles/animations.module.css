@@ -1,0 +1,69 @@
+/* Scroll Animation Styles */
+
+/* Fade and slide up animation */
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fade and slide right animation */
+@keyframes fadeSlideRight {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Fade and slide left animation */
+@keyframes fadeSlideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Base animation class - applied when element is visible */
+.fadeUp {
+  opacity: 0;
+  animation: fadeSlideUp 0.7s ease-out forwards;
+  will-change: opacity, transform;
+}
+
+.fadeRight {
+  opacity: 0;
+  animation: fadeSlideRight 0.7s ease-out forwards;
+  will-change: opacity, transform;
+}
+
+.fadeLeft {
+  opacity: 0;
+  animation: fadeSlideLeft 0.7s ease-out forwards;
+  will-change: opacity, transform;
+}
+
+/* Screen reader only class for accessibility */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

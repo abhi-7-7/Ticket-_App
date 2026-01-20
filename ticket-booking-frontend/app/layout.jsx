@@ -1,5 +1,7 @@
 import './globals.css';
-import Navbar from '../components/Navbar';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+import { AuthWrapper } from './auth-provider';
 
 export const metadata = {
   title: 'Ticket Booking & Blogging',
@@ -10,8 +12,15 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <Navbar />
-        <main style={{ padding: '1rem' }}>{children}</main>
+        <AuthWrapper>
+          <div className="app-container">
+            <Navbar />
+            <main className="page">
+              {children}
+            </main>
+            <Footer />
+          </div>
+        </AuthWrapper>
       </body>
     </html>
   );

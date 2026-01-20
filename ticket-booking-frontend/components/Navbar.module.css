@@ -1,0 +1,194 @@
+/* Navbar Container */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: white;
+  border-bottom: 2px solid #eee;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* Left section: Logo and links */
+.navLeft {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+/* Logo */
+.logo {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #0070f3;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+.logo:hover {
+  color: #0056b3;
+}
+
+/* Navigation links container */
+.navLinks {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* Individual nav link */
+.navLink {
+  padding: 0.5rem 0.875rem;
+  color: #555;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.navLink:hover {
+  color: #0070f3;
+  background-color: #f0f8ff;
+}
+
+/* Active nav link */
+.navLink.active {
+  color: #0070f3;
+  background-color: #f0f8ff;
+  font-weight: 600;
+}
+
+.navLink.active::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background-color: #0070f3;
+  border-radius: 2px;
+}
+
+/* Right section: User info and auth buttons */
+.navRight {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* User info display */
+.userInfo {
+  padding: 0.5rem 0.875rem;
+  background-color: #f0f8ff;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: #333;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+/* Logout button */
+.logoutBtn {
+  padding: 0.5rem 1rem;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.logoutBtn:hover {
+  background-color: #c82333;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+}
+
+.logoutBtn:active {
+  transform: translateY(0);
+}
+
+/* Login button */
+.loginBtn {
+  padding: 0.5rem 1rem;
+  background-color: #0070f3;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.loginBtn:hover {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 112, 243, 0.3);
+}
+
+/* Sign up button */
+.signupBtn {
+  padding: 0.5rem 1rem;
+  background-color: #28a745;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.signupBtn:hover {
+  background-color: #218838;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .navLeft {
+    width: 100%;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .navLinks {
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .navRight {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .navLink {
+    padding: 0.5rem 0.625rem;
+    font-size: 0.85rem;
+  }
+
+  .logo {
+    font-size: 1.2rem;
+  }
+}
