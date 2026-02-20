@@ -88,7 +88,45 @@ function StickyBookingCard({
   error,
   user,
 }) {
-  const isValid = selectedRoom && dates.checkIn && dates.checkOut && dates.checkIn < dates.checkOut;
+  // Comprehensive validation state
+  const getValidationState = () => {
+    if (!dates.checkIn) {
+      return { valid: false, message: 'Please select check-in date' };
+    }
+    if (!dates.checkOut) {
+      return { valid: false, message: 'Please select check-out date' };
+    }
+    
+    const checkIn = new Date(dates.checkIn);
+    const checkOut = new Date(dates.checkOut);
+    
+    if (checkIn >= checkOut) {
+      return { valid: false, message: 'Check-out must be after check-in' };
+    }
+    
+    if (guests < 1 || guests > 8) {
+      return { valid: false, message: 'Guests must be between 1 and 8' };
+    }
+    
+    if (!selectedRoom) {
+      return { valid: false, message: 'Please select a room' };
+    }
+    
+    return { valid: true, message: '' };
+  };
+
+  const validationState = getValidationState();
+
+  // Dynamic button text based on validation state
+  const getButtonText = () => {
+    if (isBooking) return 'Processing...';
+    if (validationState.valid) return 'Reserve Now';
+    if (!dates.checkIn) return 'Select Check-in';
+    if (!dates.checkOut) return 'Select Check-out';
+    if (dates.checkIn && dates.checkOut && new Date(dates.checkIn) >= new Date(dates.checkOut)) return 'Valid Dates';
+    if (!selectedRoom) return 'Select Room';
+    return 'Complete Form';
+  };
 
   return (
     <div className={styles.stickyBookingCard}>
@@ -111,6 +149,7 @@ function StickyBookingCard({
             onChange={(e) => onDatesChange({ ...dates, checkIn: e.target.value })}
             min={new Date().toISOString().split('T')[0]}
             className={styles.formInput}
+            aria-label="Check-in date"
           />
         </div>
 
@@ -123,6 +162,7 @@ function StickyBookingCard({
             onChange={(e) => onDatesChange({ ...dates, checkOut: e.target.value })}
             min={dates.checkIn || new Date().toISOString().split('T')[0]}
             className={styles.formInput}
+            aria-label="Check-out date"
           />
         </div>
 
@@ -132,11 +172,13 @@ function StickyBookingCard({
           <input
             type="number"
             value={guests}
-            onChange={(e) => onGuestsChange(Math.max(1, parseInt(e.target.value) || 1))}
+            onChange={(e) => onGuestsChange(Math.min(8, Math.max(1, parseInt(e.target.value) || 1)))}
             min="1"
             max="8"
             className={styles.formInput}
+            aria-label="Number of guests"
           />
+          <small className={styles.helpText}>1 to 8 guests</small>
         </div>
 
         {/* Nights Display */}
@@ -156,7 +198,15 @@ function StickyBookingCard({
           </div>
         )}
 
-        {/* Error Message */}
+        {/* Validation Error Message */}
+        {!validationState.valid && (
+          <div className={styles.validationError} role="alert">
+            <span className={styles.validationIcon}>ℹ️</span>
+            {validationState.message}
+          </div>
+        )}
+
+        {/* Server Error Message */}
         {error && (
           <div className={styles.errorAlert}>
             <span className={styles.errorIcon}>⚠️</span>
@@ -168,11 +218,12 @@ function StickyBookingCard({
         {user ? (
           <Button
             onClick={onBook}
-            disabled={isBooking || !isValid}
+            disabled={isBooking || !validationState.valid}
             className={styles.bookButton}
             style={{ width: '100%' }}
+            aria-label={validationState.valid ? 'Complete booking' : validationState.message}
           >
-            {isBooking ? 'Processing...' : isValid ? 'Reserve Now' : 'Select Dates & Room'}
+            {getButtonText()}
           </Button>
         ) : (
           <div className={styles.loginPrompt}>

@@ -96,174 +96,193 @@ export default function BlogDetailPage() {
     );
   }
 
+  // Defensive fallback - ensure blog is valid
+  if (!blog) {
+    return <p>Unable to load blog.</p>;
+  }
+
   const readTime = calculateReadTime(blog.content);
-  const authorInitial = blog.author?.[0]?.toUpperCase() || 'A';
 
-  return (
-    <div className={styles.page}>
-      {/* Hero Header */}
-      <div className={styles.heroHeader}>
-        <div className={styles.heroContainer}>
-          <div className={styles.heroContent}>
-            <Link href="/blogs" className={styles.breadcrumb}>
-              ← Back to articles
-            </Link>
-            
-            <h1 className={styles.heroTitle}>{blog.title}</h1>
-            
-            <p className={styles.heroDescription}>
-              {blog.description || blog.excerpt || 'Read this article to learn more'}
-            </p>
+  // Handle author - could be string or object
+  const authorName = typeof blog.author === 'object' && blog.author !== null
+    ? (blog.author.username || blog.author.name || blog.author.email || 'Unknown Author')
+    : (blog.author || 'Travel Insights');
+  const authorInitial = authorName?.[0]?.toUpperCase() || 'A';
 
-            {/* Article Meta */}
-            <div className={styles.articleMeta}>
-              <div className={styles.authorInfo}>
-                <div className={styles.avatar}>{authorInitial}</div>
-                <div className={styles.authorDetails}>
-                  <p className={styles.authorName}>{blog.author || 'Travel Insights'}</p>
-                  <p className={styles.articleStats}>
-                    {formatDate(blog.createdAt)} · {readTime} min read
-                  </p>
+  try {
+    return (
+      <div className={styles.page}>
+        {/* Hero Header */}
+        <div className={styles.heroHeader}>
+          <div className={styles.heroContainer}>
+            <div className={styles.heroContent}>
+              <Link href="/blogs" className={styles.breadcrumb}>
+                ← Back to articles
+              </Link>
+              
+              <h1 className={styles.heroTitle}>{blog.title}</h1>
+              
+              <p className={styles.heroDescription}>
+                {blog.description || blog.excerpt || 'Read this article to learn more'}
+              </p>
+
+              {/* Article Meta */}
+              <div className={styles.articleMeta}>
+                <div className={styles.authorInfo}>
+                  <div className={styles.avatar}>{authorInitial}</div>
+                  <div className={styles.authorDetails}>
+                      <p className={styles.authorName}>{authorName}</p>
+                    <p className={styles.articleStats}>
+                      {formatDate(blog.createdAt)} · {readTime} min read
+                    </p>
+                  </div>
+                </div>
+
+                {/* Share Buttons */}
+                <div className={styles.shareButtons}>
+                  {shareOptions.map((option, idx) => (
+                    <a
+                      key={idx}
+                      href={option.href}
+                      className={styles.shareButton}
+                      title={option.label}
+                    >
+                      {option.icon}
+                    </a>
+                  ))}
                 </div>
               </div>
+            </div>
 
-              {/* Share Buttons */}
-              <div className={styles.shareButtons}>
+            {/* Cover Image */}
+            {blog.image && (
+              <div className={styles.heroCover}>
+                <img src={blog.image} alt={blog.title} />
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Main Content Grid */}
+        <div className={styles.contentGrid}>
+          {/* Article Content */}
+          <article className={styles.articleContent}>
+            <div className={styles.articleBody}>
+              {blog.content ? (
+                <div className={styles.richContent}>
+                  {blog.content.split('\n').map((paragraph, idx) => (
+                    paragraph.trim() && (
+                      <p key={idx} className={styles.paragraph}>
+                        {paragraph}
+                      </p>
+                    )
+                  ))}
+                </div>
+              ) : (
+                <p className={styles.paragraph}>{blog.description}</p>
+              )}
+            </div>
+
+            {/* Article Tags */}
+            {blog.tags && blog.tags.length > 0 && (
+              <div className={styles.tagSection}>
+                <p className={styles.tagLabel}>Topics:</p>
+                <div className={styles.tagList}>
+                  {blog.tags.map((tag, idx) => (
+                    <Badge key={idx} variant="secondary">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Bottom CTA */}
+            <div className={styles.bottomCTA}>
+              <Card padding="md" className={styles.ctaCard}>
+                <h3>Ready to book your next adventure?</h3>
+                <p>Explore our curated collection of hotels and flights</p>
+                <div className={styles.ctaButtons}>
+                  <Link href="/hotels">
+                    <Button variant="primary">Explore Hotels</Button>
+                  </Link>
+                  <Link href="/bookings">
+                    <Button variant="secondary">View My Bookings</Button>
+                  </Link>
+                </div>
+              </Card>
+            </div>
+          </article>
+
+          {/* Sidebar */}
+          <aside className={styles.sidebar}>
+            {/* Related Articles */}
+            {relatedBlogs.length > 0 && (
+              <Card padding="md" className={styles.sidebarCard}>
+                <h4 className={styles.sidebarTitle}>Related Articles</h4>
+                <div className={styles.relatedList}>
+                  {relatedBlogs.map((related) => (
+                    <Link
+                      key={related._id}
+                      href={`/blogs/${related.slug || related._id}`}
+                      className={styles.relatedItem}
+                    >
+                      <h5 className={styles.relatedTitle}>{related.title}</h5>
+                      <p className={styles.relatedMeta}>
+                        {formatDate(related.createdAt)} · {calculateReadTime(related.content)} min
+                      </p>
+                    </Link>
+                  ))}
+                </div>
+              </Card>
+            )}
+
+            {/* Newsletter Signup */}
+            <Card padding="md" className={styles.sidebarCard}>
+              <h4 className={styles.sidebarTitle}>Travel Tips Weekly</h4>
+              <p className={styles.newsletterText}>
+                Get insider tips and exclusive deals in your inbox
+              </p>
+              <form className={styles.newsletterForm}>
+                <input
+                  type="email"
+                  placeholder="your@email.com"
+                  className={styles.newsletterInput}
+                  required
+                />
+                <Button variant="primary" size="sm" className={styles.newsletterButton}>
+                  Subscribe
+                </Button>
+              </form>
+            </Card>
+
+            {/* Share Section */}
+            <Card padding="md" className={styles.sidebarCard}>
+              <h4 className={styles.sidebarTitle}>Share Article</h4>
+              <div className={styles.socialLinks}>
                 {shareOptions.map((option, idx) => (
                   <a
                     key={idx}
                     href={option.href}
-                    className={styles.shareButton}
+                    className={styles.socialLink}
                     title={option.label}
                   >
-                    {option.icon}
+                    <span>{option.icon}</span>
+                    <span>{option.label}</span>
                   </a>
                 ))}
               </div>
-            </div>
-          </div>
-
-          {/* Cover Image */}
-          {blog.image && (
-            <div className={styles.heroCover}>
-              <img src={blog.image} alt={blog.title} />
-            </div>
-          )}
+            </Card>
+          </aside>
         </div>
       </div>
-
-      {/* Main Content Grid */}
-      <div className={styles.contentGrid}>
-        {/* Article Content */}
-        <article className={styles.articleContent}>
-          <div className={styles.articleBody}>
-            {blog.content ? (
-              <div className={styles.richContent}>
-                {blog.content.split('\n').map((paragraph, idx) => (
-                  paragraph.trim() && (
-                    <p key={idx} className={styles.paragraph}>
-                      {paragraph}
-                    </p>
-                  )
-                ))}
-              </div>
-            ) : (
-              <p className={styles.paragraph}>{blog.description}</p>
-            )}
-          </div>
-
-          {/* Article Tags */}
-          {blog.tags && blog.tags.length > 0 && (
-            <div className={styles.tagSection}>
-              <p className={styles.tagLabel}>Topics:</p>
-              <div className={styles.tagList}>
-                {blog.tags.map((tag, idx) => (
-                  <Badge key={idx} variant="secondary">
-                    {tag}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Bottom CTA */}
-          <div className={styles.bottomCTA}>
-            <Card padding="md" className={styles.ctaCard}>
-              <h3>Ready to book your next adventure?</h3>
-              <p>Explore our curated collection of hotels and flights</p>
-              <div className={styles.ctaButtons}>
-                <Link href="/hotels">
-                  <Button variant="primary">Explore Hotels</Button>
-                </Link>
-                <Link href="/bookings">
-                  <Button variant="secondary">View My Bookings</Button>
-                </Link>
-              </div>
-            </Card>
-          </div>
-        </article>
-
-        {/* Sidebar */}
-        <aside className={styles.sidebar}>
-          {/* Related Articles */}
-          {relatedBlogs.length > 0 && (
-            <Card padding="md" className={styles.sidebarCard}>
-              <h4 className={styles.sidebarTitle}>Related Articles</h4>
-              <div className={styles.relatedList}>
-                {relatedBlogs.map((related) => (
-                  <Link
-                    key={related._id}
-                    href={`/blogs/${related.slug || related._id}`}
-                    className={styles.relatedItem}
-                  >
-                    <h5 className={styles.relatedTitle}>{related.title}</h5>
-                    <p className={styles.relatedMeta}>
-                      {formatDate(related.createdAt)} · {calculateReadTime(related.content)} min
-                    </p>
-                  </Link>
-                ))}
-              </div>
-            </Card>
-          )}
-
-          {/* Newsletter Signup */}
-          <Card padding="md" className={styles.sidebarCard}>
-            <h4 className={styles.sidebarTitle}>Travel Tips Weekly</h4>
-            <p className={styles.newsletterText}>
-              Get insider tips and exclusive deals in your inbox
-            </p>
-            <form className={styles.newsletterForm}>
-              <input
-                type="email"
-                placeholder="your@email.com"
-                className={styles.newsletterInput}
-                required
-              />
-              <Button variant="primary" size="sm" className={styles.newsletterButton}>
-                Subscribe
-              </Button>
-            </form>
-          </Card>
-
-          {/* Share Section */}
-          <Card padding="md" className={styles.sidebarCard}>
-            <h4 className={styles.sidebarTitle}>Share Article</h4>
-            <div className={styles.socialLinks}>
-              {shareOptions.map((option, idx) => (
-                <a
-                  key={idx}
-                  href={option.href}
-                  className={styles.socialLink}
-                  title={option.label}
-                >
-                  <span>{option.icon}</span>
-                  <span>{option.label}</span>
-                </a>
-              ))}
-            </div>
-          </Card>
-        </aside>
+    );
+  } catch (err) {
+    return (
+      <div className="error">
+        <h2>Unable to load blog</h2>
+        <p>Please try again later.</p>
       </div>
-    </div>
-  );
+    );
+  }
 }

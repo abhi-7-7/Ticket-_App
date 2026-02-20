@@ -95,7 +95,7 @@ router.post('/', async (req, res) => {
     return res.status(201).json({ booking });
   } catch (err) {
     console.error('Booking error:', err);
-    return res.status(500).json({ error: 'failed to create booking', details: err.message });
+    return res.status(500).json({ error: 'failed to create booking' });
   }
 });
 
@@ -137,7 +137,7 @@ router.delete('/:id', async (req, res) => {
     return res.json({ message: 'booking cancelled', booking });
   } catch (err) {
     console.error('Cancel booking error:', err);
-    return res.status(500).json({ error: 'failed to cancel booking', details: err.message });
+    return res.status(500).json({ error: 'failed to cancel booking' });
   }
 });
 
@@ -169,7 +169,8 @@ router.get('/', async (req, res) => {
 
     return res.json({ count: result.length, bookings: result });
   } catch (err) {
-    return res.status(500).json({ error: 'failed to list bookings', details: err.message });
+    console.error('List bookings error:', err);
+    return res.status(500).json({ error: 'failed to list bookings' });
   }
 });
 
@@ -210,8 +211,9 @@ router.post('/manager/check-in/:bookingId', async (req, res) => {
 
     return res.json({ booking: updated });
   } catch (err) {
+    console.error('Check-in error:', err);
     if (err.message === 'booking not found') return res.status(404).json({ error: err.message });
-    return res.status(500).json({ error: 'failed to check-in booking', details: err.message });
+    return res.status(500).json({ error: 'failed to check-in booking' });
   } finally {
     session.endSession();
   }
@@ -250,8 +252,9 @@ router.post('/manager/check-out/:bookingId', async (req, res) => {
 
     return res.json({ booking: updated });
   } catch (err) {
+    console.error('Check-out error:', err);
     if (err.message === 'booking not found') return res.status(404).json({ error: err.message });
-    return res.status(500).json({ error: 'failed to check-out booking', details: err.message });
+    return res.status(500).json({ error: 'failed to check-out booking' });
   } finally {
     session.endSession();
   }
@@ -299,7 +302,8 @@ router.get('/manager/bookings', async (req, res) => {
     const grouped = Array.from(groupsMap.values());
     return res.json({ count: bookings.length, grouped });
   } catch (err) {
-    return res.status(500).json({ error: 'failed to list manager bookings', details: err.message });
+    console.error('Manager bookings error:', err);
+    return res.status(500).json({ error: 'failed to list manager bookings' });
   }
 });
 

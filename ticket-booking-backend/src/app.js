@@ -4,6 +4,7 @@ import cors from 'cors';
 import methodOverride from 'method-override';
 import session from 'express-session';
 import passport from './config/passport.js';
+import { csrfProtection, validateOrigin } from './middleware/csrf.middleware.js';
 
 import dotenv from 'dotenv';
 
@@ -18,8 +19,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
 // CORS: allow frontend to communicate (adjust origin in env for production)
-// CORS: allow frontend to communicate (adjust origin in env for production)
-app.use(cors({ origin: true, credentials: true }));
+const corsOptions = {
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
+app.use(cors(corsOptions));
 
 // Session configuration
 // Session secret is read from environment; provide a default for dev but
@@ -44,6 +50,10 @@ app.use(
 // Initialize Passport (no routes here)
 app.use(passport.initialize());
 app.use(passport.session());
+
+// SECURITY: Apply CSRF and origin validation to state-changing requests
+app.use(csrfProtection);
+app.use(validateOrigin);
 
 // Root route
 app.get('/', (req, res) => {

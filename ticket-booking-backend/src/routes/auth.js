@@ -37,8 +37,9 @@ router.post('/signup', async (req, res) => {
       return res.status(201).json({ user: userSafe });
     });
   } catch (err) {
+    console.error('Signup error:', err);
     // Duplicate key errors could be caught here as well
-    return res.status(500).json({ error: 'failed to create user', details: err.message });
+    return res.status(500).json({ error: 'failed to create user' });
   }
 });
 

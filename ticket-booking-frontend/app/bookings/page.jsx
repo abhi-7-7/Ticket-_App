@@ -134,7 +134,7 @@ function EmptyState() {
 // MAIN BOOKINGS PAGE
 // ============================================================================
 export default function BookingsPage() {
-  const { user } = useContext(AuthContext);
+  const { user, loading: authLoading } = useContext(AuthContext);
   const router = useRouter();
 
   const [bookings, setBookings] = useState([]);
@@ -145,6 +145,11 @@ export default function BookingsPage() {
   const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, bookingId: null });
 
   useEffect(() => {
+    // Wait for auth to finish loading before checking user
+    if (authLoading) {
+      return;
+    }
+
     if (!user) {
       router.push('/login');
       return;
@@ -163,7 +168,7 @@ export default function BookingsPage() {
     };
 
     fetchBookings();
-  }, [user, router]);
+  }, [user, authLoading, router]);
 
   const handleCancelBooking = async (bookingId) => {
     setCancelLoading(bookingId);
@@ -188,8 +193,22 @@ export default function BookingsPage() {
     handleCancelBooking(confirmDialog.bookingId);
   };
 
+  // Show loading spinner while auth is loading
+  if (authLoading || loading) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.bookingsGrid}>
+          {[1, 2, 3].map((i) => (
+            <BookingSkeleton key={i} />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // This should never show now because of redirect in useEffect
   if (!user) {
-    return <p>Loading...</p>;
+    return null;
   }
 
   return (
@@ -214,13 +233,7 @@ export default function BookingsPage() {
       )}
 
       {/* Content */}
-      {loading ? (
-        <div className={styles.bookingsGrid}>
-          {[1, 2, 3].map((i) => (
-            <BookingSkeleton key={i} />
-          ))}
-        </div>
-      ) : bookings.length === 0 ? (
+      {bookings.length === 0 ? (
         <EmptyState />
       ) : (
         <>

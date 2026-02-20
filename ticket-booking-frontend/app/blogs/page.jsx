@@ -153,10 +153,12 @@ export default function BlogsPage() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className={styles.searchInput}
+                aria-label="Search blog posts"
               />
             </div>
             <div className={styles.tagFilter}>
               <button
+                type="button"
                 className={`${styles.tagBtn} ${!selectedTag ? styles.active : ''}`}
                 onClick={() => setSelectedTag('')}
               >
@@ -165,6 +167,7 @@ export default function BlogsPage() {
               {allTags.map((tag) => (
                 <button
                   key={tag}
+                  type="button"
                   className={`${styles.tagBtn} ${selectedTag === tag ? styles.active : ''}`}
                   onClick={() => setSelectedTag(tag)}
                 >

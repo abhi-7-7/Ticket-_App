@@ -67,7 +67,7 @@ export default function ManagerPage() {
     return (
       <div style={{ padding: '20px' }}>
         <p style={{ color: 'red' }}>Error: {error}</p>
-        <button onClick={fetchBookings}>Retry</button>
+        <button type="button" onClick={fetchBookings}>Retry</button>
       </div>
     );
   }
@@ -104,6 +104,7 @@ export default function ManagerPage() {
           </select>
         </div>
         <button 
+          type="button"
           onClick={applyFilters}
           style={{
             padding: '8px 16px',
@@ -117,6 +118,7 @@ export default function ManagerPage() {
           Apply Filters
         </button>
         <button 
+          type="button"
           onClick={fetchBookings}
           style={{
             padding: '8px 16px',
@@ -229,6 +231,7 @@ export default function ManagerPage() {
                       <td style={{ border: '1px solid #ddd', padding: '10px' }}>
                         {booking.status === 'confirmed' && (
                           <button
+                            type="button"
                             onClick={() => handleCheckIn(booking.id)}
                             disabled={actionLoading === booking.id}
                             style={{
@@ -247,6 +250,7 @@ export default function ManagerPage() {
                         )}
                         {booking.status === 'checked_in' && (
                           <button
+                            type="button"
                             onClick={() => handleCheckOut(booking.id)}
                             disabled={actionLoading === booking.id}
                             style={{

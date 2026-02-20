@@ -171,6 +171,10 @@ function FilterBar({
   const amenitiesOptions = ['WiFi', 'Pool', 'Parking'];
 
   const isFiltersActive = selectedCity || minPrice !== minPriceRange || maxPrice !== maxPriceRange || selectedRating || selectedAmenities.length > 0 || sortBy !== 'name';
+  // Validation for min price input
+  const isMinPriceInvalid =
+    minPrice !== "" && Number(minPrice) < 0;
+
 
   return (
     <div className={styles.filterBar}>
@@ -214,6 +218,7 @@ function FilterBar({
             disabled={loading}
             className={styles.filterInput}
             placeholder="$0"
+                      aria-invalid={isMinPriceInvalid}
           />
         </div>
 

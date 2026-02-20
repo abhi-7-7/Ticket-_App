@@ -26,7 +26,8 @@ router.get('/', async (req, res) => {
 
     return res.json({ data: result, blogs: result, count: result.length });
   } catch (err) {
-    return res.status(500).json({ error: 'failed to list blogs', details: err.message });
+    console.error('Blog list error:', err);
+    return res.status(500).json({ error: 'failed to list blogs' });
   }
 });
 
@@ -57,7 +58,8 @@ router.get('/:slug', async (req, res) => {
 
     return res.json({ data: result, blog: result });
   } catch (err) {
-    return res.status(500).json({ error: 'failed to load blog', details: err.message });
+    console.error('Blog detail error:', err);
+    return res.status(500).json({ error: 'failed to load blog' });
   }
 });
 
